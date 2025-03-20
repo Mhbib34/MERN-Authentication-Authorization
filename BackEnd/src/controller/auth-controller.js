@@ -6,8 +6,11 @@ import {
   logoutUser,
   registerUser,
   userEmailVerification,
+  userResetPassword,
+  userResetPasswordOtp,
   verifyOtpUser,
 } from "../services/auth-services.js";
+import bcrypt from "bcrypt";
 
 export const register = async (req, res, next) => {
   try {
@@ -116,6 +119,37 @@ export const verifyEmail = async (req, res, next) => {
         email: user.email,
         isAccountVerified: user.isAccountVerified,
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const isAuthenticated = async (req, res, next) => {
+  try {
+    return res.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const sendResetPasswordOtp = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const { user, otp } = await userResetPasswordOtp(email);
+    const mailOption = {
+      from: process.env.SENDER_EMAIL,
+      to: user.email,
+      subject: `Account Verify OTP!`,
+      text: `Your OTP is ${otp}. Reset your password using this OTP!`,
+    };
+    await transporter.sendMail(mailOption);
+
+    res.status(200).json({
+      success: true,
+      message: "OTP sent to your email",
     });
   } catch (error) {
     next(error);

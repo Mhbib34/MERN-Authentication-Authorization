@@ -89,3 +89,18 @@ export const userEmailVerification = async (userId, otp) => {
 
   return { user };
 };
+
+export const userResetPasswordOtp = async (email) => {
+  if (!email) throw new ResponseError(400, "Email is required!");
+
+  const user = await userModel.findOne({ email });
+  if (!user) throw new ResponseError(404, "User is not found");
+
+  const otp = String(Math.floor(100000 + Math.random() * 900000));
+
+  user.resetOtp = otp;
+  user.resetOtpExpireAt = new Date(Date.now() + 15 * 60 * 1000);
+  await user.save();
+
+  return { user, otp };
+};
