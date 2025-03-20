@@ -1,8 +1,12 @@
 import transporter from "../config/nodemailer.js";
+import { ResponseError } from "../error/response-error.js";
+import userModel from "../models/user-model.js";
 import {
   loginUser,
   logoutUser,
   registerUser,
+  userEmailVerification,
+  verifyOtpUser,
 } from "../services/auth-services.js";
 
 export const register = async (req, res, next) => {
@@ -72,6 +76,27 @@ export const logout = async (req, res, next) => {
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
     });
     return res.status(200).json(logoutUser());
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const sendVerifyOtp = async (req, res, next) => {
+  try {
+    const { userId } = req.body;
+    const { otp, user } = await verifyOtpUser(userId);
+    const mailOption = {
+      from: process.env.SENDER_EMAIL,
+      to: user.email,
+      subject: `Account Verify OTP!`,
+      text: `Your OTP is ${otp}. Verify your account using this OTP!`,
+    };
+    await transporter.sendMail(mailOption);
+
+    res.status(200).json({
+      success: true,
+      message: "Verification OTP sent on email",
+    });
   } catch (error) {
     next(error);
   }
