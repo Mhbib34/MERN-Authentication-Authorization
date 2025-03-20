@@ -87,5 +87,5 @@ export const userEmailVerification = async (userId, otp) => {
   user.verifyOtpExpireAt = null;
   await user.save();
 
-  return { success: true, message: "User verified successfully", user };
+  return { user };
 };
