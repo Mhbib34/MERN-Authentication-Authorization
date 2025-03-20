@@ -101,3 +101,23 @@ export const sendVerifyOtp = async (req, res, next) => {
     next(error);
   }
 };
+
+export const verifyEmail = async (req, res, next) => {
+  try {
+    const { userId, otp } = req.body;
+    const { user } = await userEmailVerification(userId, otp);
+
+    res.status(200).json({
+      success: true,
+      message: "Email verified successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        isAccountVerified: user.isAccountVerified,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
