@@ -104,3 +104,27 @@ export const userResetPasswordOtp = async (email) => {
 
   return { user, otp };
 };
+
+export const userResetPassword = async (email, otp, newPassword) => {
+  if (!email || !otp || !newPassword)
+    throw new ResponseError(400, "Email, OTP and new password are required");
+
+  const user = await userModel.findOne({ email });
+  if (!user) throw new ResponseError(404, "User is not found");
+
+  if (user.resetOtp === "" || user.resetOtp !== otp)
+    throw new ResponseError(400, "Invalid OTP");
+
+  if (user.resetOtpExpiredAt < Date.now())
+    throw new ResponseError(400, "OTP expired!");
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  user.password = hashedPassword;
+  user.resetOtp = "";
+  user.resetOtpExpiredAt = null;
+
+  await user.save();
+
+  return { user };
+};

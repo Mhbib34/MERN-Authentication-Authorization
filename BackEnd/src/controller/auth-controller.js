@@ -155,3 +155,22 @@ export const sendResetPasswordOtp = async (req, res, next) => {
     next(error);
   }
 };
+
+export const resetUserPassword = async (req, res, next) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    const { user } = await userResetPassword(email, otp, newPassword);
+
+    res.status(200).json({
+      success: true,
+      message: "Password has been reset successfully!",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
