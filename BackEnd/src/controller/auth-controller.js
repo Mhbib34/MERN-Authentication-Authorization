@@ -1,6 +1,4 @@
 import transporter from "../config/nodemailer.js";
-import { ResponseError } from "../error/response-error.js";
-import userModel from "../models/user-model.js";
 import {
   loginUser,
   logoutUser,
@@ -10,7 +8,6 @@ import {
   userResetPasswordOtp,
   verifyOtpUser,
 } from "../services/auth-services.js";
-import bcrypt from "bcrypt";
 
 export const register = async (req, res, next) => {
   try {
