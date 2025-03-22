@@ -28,6 +28,10 @@ const Login = () => {
         if (data.success) {
           setIsLoggedin(true);
           navigate("/");
+          toast.success(data.message, {
+            autoClose: 2000,
+            theme: "colored",
+          });
         } else {
           toast.error(data.message);
         }
@@ -39,15 +43,22 @@ const Login = () => {
         if (data.success) {
           setIsLoggedin(true);
           navigate("/");
-          toast.success(data.message);
+          toast.success(data.message, {
+            autoClose: 2000,
+            theme: "colored",
+          });
         } else {
           toast.error(data.message);
         }
       }
     } catch (error) {
-      toast.error(error.response.data.errors);
+      toast.error(error.response.data.errors, {
+        autoClose: 2000,
+        theme: "colored",
+      });
     }
   };
+
   return (
     <div className="flex items-center justify-center min-h-screen px-6 bg-gradient-to-br from-secondary to-primary">
       <img
