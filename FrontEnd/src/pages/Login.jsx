@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 const Login = () => {
   const navigate = useNavigate();
 
-  const { backEndUrl, setIsLoggedin } = useContext(AppContext);
+  const { backEndUrl, setIsLoggedin, getUserData } = useContext(AppContext);
   const [state, setState] = useState("Sign Up");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -28,6 +28,7 @@ const Login = () => {
         if (data.success) {
           setIsLoggedin(true);
           navigate("/");
+          getUserData();
           toast.success(data.message, {
             autoClose: 2000,
             theme: "colored",
@@ -43,6 +44,7 @@ const Login = () => {
         if (data.success) {
           setIsLoggedin(true);
           navigate("/");
+          getUserData();
           toast.success(data.message, {
             autoClose: 2000,
             theme: "colored",
