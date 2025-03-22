@@ -1,14 +1,53 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { assets } from "../assets/assets";
 import Button from "../components/common/Button";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate();
+
+  const { backEndUrl, setIsLoggedin } = useContext(AppContext);
   const [state, setState] = useState("Sign Up");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const onSubmitHandler = async (e) => {
+    try {
+      e.preventDefault();
+      axios.defaults.withCredentials = true;
+      if (state === "Sign Up") {
+        const { data } = await axios.post(`${backEndUrl}/api/auth/register`, {
+          name,
+          email,
+          password,
+        });
+        if (data.success) {
+          setIsLoggedin(true);
+          navigate("/");
+        } else {
+          toast.error(data.message);
+        }
+      } else {
+        const { data } = await axios.post(`${backEndUrl}/api/auth/login`, {
+          email,
+          password,
+        });
+        if (data.success) {
+          setIsLoggedin(true);
+          navigate("/");
+          toast.success(data.message);
+        } else {
+          toast.error(data.message);
+        }
+      }
+    } catch (error) {
+      toast.error(error.response.data.errors);
+    }
+  };
   return (
     <div className="flex items-center justify-center min-h-screen px-6 bg-gradient-to-br from-secondary to-primary">
       <img
@@ -25,7 +64,11 @@ const Login = () => {
             ? "Create your Account"
             : "Login to your account!"}
         </p>
-        <form action="" className="flex flex-col gap-2">
+        <form
+          action=""
+          className="flex flex-col gap-2"
+          onSubmit={onSubmitHandler}
+        >
           {state === "Sign Up" && (
             <div className="flex items-center gap-3 w-full rounded-full bg-tertiary px-5 py-2.5 ">
               <img src={assets.person_icon} alt="" />

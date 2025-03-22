@@ -10,9 +10,10 @@ import { userRouter } from "../routes/user-routes.js";
 export const app = express();
 
 connectDb();
+const allowedOrigins = ["http://localhost:5173"];
 
 app.use(express.json());
-app.use(cors({ credentials: true }));
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
