@@ -83,7 +83,7 @@ export const userEmailVerification = async (userId, otp) => {
   }
 
   user.isAccountVerified = true;
-  user.verifyOtp = "";
+  user.verifyOtp = null;
   user.verifyOtpExpireAt = null;
   await user.save();
 
@@ -121,8 +121,8 @@ export const userResetPassword = async (email, otp, newPassword) => {
   const hashedPassword = await bcrypt.hash(newPassword, 10);
 
   user.password = hashedPassword;
-  user.resetOtp = "";
-  user.resetOtpExpiredAt = null;
+  user.resetOtp = null;
+  user.resetOtpExpireAt = null;
 
   await user.save();
 

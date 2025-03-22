@@ -1,3 +1,7 @@
+import {
+  welcomeEmailTemplate,
+  otpEmailTemplate,
+} from "../config/email-template.js";
 import transporter from "../config/nodemailer.js";
 import {
   loginUser,
@@ -24,7 +28,7 @@ export const register = async (req, res, next) => {
       from: process.env.SENDER_EMAIL,
       to: email,
       subject: `Welcome ${name}!`,
-      text: `Welcome to our website,Your account has been created with email id: ${email}`,
+      html: welcomeEmailTemplate(email, name),
     };
     await transporter.sendMail(mailOption);
 
@@ -89,7 +93,7 @@ export const sendVerifyOtp = async (req, res, next) => {
       from: process.env.SENDER_EMAIL,
       to: user.email,
       subject: `Account Verify OTP!`,
-      text: `Your OTP is ${otp}. Verify your account using this OTP!`,
+      html: otpEmailTemplate(user.name, otp, "verify your email"),
     };
     await transporter.sendMail(mailOption);
 
@@ -140,7 +144,7 @@ export const sendResetPasswordOtp = async (req, res, next) => {
       from: process.env.SENDER_EMAIL,
       to: user.email,
       subject: `Account Verify OTP!`,
-      text: `Your OTP is ${otp}. Reset your password using this OTP!`,
+      html: otpEmailTemplate(user.name, otp, "change your password"),
     };
     await transporter.sendMail(mailOption);
 
