@@ -10,7 +10,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const { backEndUrl, setIsLoggedin, getUserData } = useContext(AppContext);
-  const [state, setState] = useState("Sign Up");
+  const [state, setState] = useState("Login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -114,9 +114,7 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               value={password}
               type="password"
-              placeholder={
-                state === "Sign Up" ? "Your password" : "***************"
-              }
+              placeholder={state === "Sign Up" ? "Your password" : "*********"}
               required
               className="bg-transparent outline-none text-white w-full"
             />

@@ -5,6 +5,7 @@ import { useContext, useEffect, useRef } from "react";
 import axios from "axios";
 import { AppContext } from "../context/AppContext";
 import { toast } from "react-toastify";
+import { handleInput, handleKeyDown } from "../services/auth-services.js";
 
 const EmailVerify = () => {
   const navigate = useNavigate();
@@ -12,18 +13,6 @@ const EmailVerify = () => {
   axios.defaults.withCredentials = true;
   const { backEndUrl, isLoggedin, userData, getUserData } =
     useContext(AppContext);
-
-  const handleInput = (e, index) => {
-    if (e.target.value.length > 0 && index < inputRefs.current.length - 1) {
-      inputRefs.current[index + 1].focus();
-    }
-  };
-
-  const handleKeyDown = (e, index) => {
-    if (e.key === "Backspace" && e.target.value === "" && index > 0) {
-      inputRefs.current[index - 1].focus();
-    }
-  };
 
   const handlePaste = (e) => {
     const paste = e.clipboardData.getData("text");
@@ -97,8 +86,8 @@ const EmailVerify = () => {
                 required
                 className=" w-12 h-12 bg-tertiary text-white text-center text-xl rounded-md"
                 ref={(e) => (inputRefs.current[index] = e)}
-                onInput={(e) => handleInput(e, index)}
-                onKeyDown={(e) => handleKeyDown(e, index)}
+                onInput={(e) => handleInput(e, index, inputRefs)}
+                onKeyDown={(e) => handleKeyDown(e, index, inputRefs)}
               />
             ))}
         </div>

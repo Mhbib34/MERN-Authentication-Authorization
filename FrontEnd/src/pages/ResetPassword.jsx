@@ -5,6 +5,7 @@ import Button from "../components/common/Button";
 import { AppContext } from "../context/AppContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { handleInput, handleKeyDown } from "../services/auth-services";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
@@ -16,18 +17,6 @@ const ResetPassword = () => {
   const inputRefs = useRef([]);
   const { backEndUrl } = useContext(AppContext);
   axios.defaults.withCredentials = true;
-
-  const handleInput = (e, index) => {
-    if (e.target.value.length > 0 && index < inputRefs.current.length - 1) {
-      inputRefs.current[index + 1].focus();
-    }
-  };
-
-  const handleKeyDown = (e, index) => {
-    if (e.key === "Backspace" && e.target.value === "" && index > 0) {
-      inputRefs.current[index - 1].focus();
-    }
-  };
 
   const handlePaste = (e) => {
     const paste = e.clipboardData.getData("text");
@@ -163,8 +152,8 @@ const ResetPassword = () => {
                   required
                   className=" w-12 h-12 bg-tertiary text-white text-center text-xl rounded-md"
                   ref={(e) => (inputRefs.current[index] = e)}
-                  onInput={(e) => handleInput(e, index)}
-                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  onInput={(e) => handleInput(e, index, inputRefs)}
+                  onKeyDown={(e) => handleKeyDown(e, index, inputRefs)}
                 />
               ))}
           </div>
